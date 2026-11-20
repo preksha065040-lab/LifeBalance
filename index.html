@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LifeBalance Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="dashboard">
+    <aside class="sidebar">
+        <h2 class="logo">LifeBalance</h2>
+        <nav>
+            <a href="#dashboard" class="active">Dashboard</a>
+            <a href="#trackers">Daily Trackers</a>
+            <a href="#moodHistory">Mood Journal</a>
+            <a href="#habits">Habits</a>
+            <a href="#meals">Meal Planner</a>
+            <a href="#analytics">Analytics</a>
+            <a href="#profile">My Profile</a>
+        </nav>
+        <button class="theme-toggle" id="themeToggle" type="button">🌙 Dark Mode</button>
+    </aside>
+
+    <main class="main-content" id="dashboard">
+        <header class="top-header">
+            <div>
+                <p class="eyebrow" id="todayDate"></p>
+                <h1 id="greeting">Good day!</h1>
+                <p>Welcome to your personal wellness dashboard.</p>
+            </div>
+            <div class="date-box">
+                <label for="recordDate">View date</label>
+                <input type="date" id="recordDate">
+            </div>
+        </header>
+
+        <section class="welcome-strip">
+            <div>
+                <strong id="welcomeName">Your wellness journey starts here.</strong>
+                <p>Small healthy choices add up. Keep going!</p>
+            </div>
+            <span>✨ One day at a time</span>
+        </section>
+
+        <h2 class="section-title" id="trackers">Daily Trackers</h2>
+        <section class="cards">
+            <div class="card">
+                <h3>💧 Water Intake</h3>
+                <p class="metric" id="waterCount">0 / 8 glasses</p>
+                <div class="progress-track"><div class="progress-fill" id="waterBar"></div></div>
+                <button onclick="addWater()">+ Add Glass</button>
+            </div>
+
+            <div class="card">
+                <h3>😴 Sleep Tracker</h3>
+                <p class="metric" id="sleepCount">Not recorded</p>
+                <input type="number" id="sleepInput" placeholder="Enter sleep hours" min="0" max="24" step="0.5">
+                <button onclick="saveSleep()">Save Sleep</button>
+            </div>
+
+            <div class="card">
+                <h3>🚶 Activity Tracker</h3>
+                <p class="metric" id="stepCount">0 steps</p>
+                <input type="number" id="stepInput" placeholder="Enter daily steps" min="0" step="1">
+                <button onclick="saveSteps()">Save Steps</button>
+                <p class="small-note" id="stepProgress">Daily Goal: 0%</p>
+            </div>
+
+            <div class="card">
+                <h3>😊 Mood Journal</h3>
+                <p id="savedMood">How are you feeling today?</p>
+                <select id="moodInput">
+                    <option value="">Select your mood</option>
+                    <option value="😊 Happy">😊 Happy</option>
+                    <option value="😌 Relaxed">😌 Relaxed</option>
+                    <option value="😐 Neutral">😐 Neutral</option>
+                    <option value="😔 Sad">😔 Sad</option>
+                    <option value="😡 Stressed">😡 Stressed</option>
+                </select>
+                <button onclick="saveMood()">Save Mood</button>
+            </div>
+
+            <div class="card" id="habits">
+                <h3>🎯 Daily Habits</h3>
+                <input type="text" id="habitInput" placeholder="Enter a new habit">
+                <button onclick="addHabit()">Add Habit</button>
+                <ul id="habitList" class="item-list"></ul>
+                <p class="small-note" id="habitProgress">Completed: 0</p>
+            </div>
+
+            <div class="card" id="meals">
+                <h3>🍎 Meal Planner</h3>
+                <select id="mealType">
+                    <option value="">Select Meal</option>
+                    <option value="Breakfast">Breakfast</option>
+                    <option value="Lunch">Lunch</option>
+                    <option value="Dinner">Dinner</option>
+                    <option value="Snacks">Snacks</option>
+                </select>
+                <input type="text" id="mealInput" placeholder="Enter your meal">
+                <button onclick="saveMeal()">Save Meal</button>
+                <ul id="mealList" class="item-list"></ul>
+            </div>
+        </section>
+
+        <h2 class="section-title" id="analytics">Wellness Analytics</h2>
+        <section class="cards">
+            <div class="card analytics-card">
+                <h3>📊 Daily Progress Overview</h3>
+                <div class="analytics-item"><span>💧 Water Intake</span><strong id="analyticsWater">0 / 8 glasses</strong></div>
+                <div class="analytics-item"><span>😴 Sleep</span><strong id="analyticsSleep">Not recorded</strong></div>
+                <div class="analytics-item"><span>🚶 Activity</span><strong id="analyticsSteps">0 steps</strong></div>
+                <div class="analytics-item"><span>🎯 Completed Habits</span><strong id="analyticsHabits">0 / 0</strong></div>
+                <button onclick="updateAnalytics()">Refresh Analytics</button>
+            </div>
+            <div class="card chart-card">
+                <h3>📈 Water Intake Progress</h3>
+                <canvas id="waterChart"></canvas>
+            </div>
+            <div class="card chart-card">
+                <h3>😴 Sleep Progress</h3>
+                <canvas id="sleepChart"></canvas>
+            </div>
+            <div class="card chart-card">
+                <h3>🚶 Activity Progress</h3>
+                <canvas id="activityChart"></canvas>
+            </div>
+            <div class="card chart-card" id="moodHistory">
+                <h3>😊 Mood History</h3>
+                <canvas id="moodChart"></canvas>
+            </div>
+            <div class="card">
+                <h3>🗓️ Calendar & Daily Record</h3>
+                <p class="small-note">Choose a date above to view or update that day's trackers. Your entries are saved in this browser.</p>
+                <p class="date-summary" id="selectedDateText"></p>
+                <button class="secondary-button" onclick="goToToday()">Go to Today</button>
+            </div>
+        </section>
+
+        <h2 class="section-title" id="profile">My Profile</h2>
+        <section class="cards profile-grid">
+            <div class="card">
+                <h3>👤 Personal Profile</h3>
+                <label for="profileName">Your name</label>
+                <input type="text" id="profileName" placeholder="Enter your name">
+                <button onclick="saveProfile()">Save Profile</button>
+            </div>
+            <div class="card">
+                <h3>🌱 Wellness Reminder</h3>
+                <p class="small-note">Remember to take breaks, drink water, move your body, and get enough rest.</p>
+            </div>
+        </section>
+
+        <footer>LifeBalance · Your personal wellness companion</footer>
+    </main>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
